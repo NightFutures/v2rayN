@@ -11,7 +11,7 @@
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
     Title="{x:Static resx:ResUI.menuDNSSetting}"
     Width="1000"
-    Height="700"
+    Height="750"
     x:TypeArguments="vms:DNSSettingViewModel"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{x:Static conv:MaterialDesignFonts.MyFont}"
@@ -50,7 +50,7 @@
             <TabItem Header="{x:Static resx:ResUI.TbSettingsCoreDns}">
                 <DockPanel Margin="{StaticResource Margin8}" Height="564.7">
                     <StackPanel DockPanel.Dock="Top">
-                        <StackPanel Orientation="Horizontal" Height="50">
+                        <StackPanel Orientation="Horizontal">
                             <TextBlock
                             Style="{StaticResource ToolbarTextBlock}"
                             Text="{x:Static resx:ResUI.TbSettingsRemoteDNS}" VerticalAlignment="Center" Margin="0,0,20,0" />
@@ -66,7 +66,7 @@
                             Cursor="Hand"
                             Style="{StaticResource DefButton}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Height="49.7">
+                        <StackPanel Orientation="Horizontal">
                             <TextBlock
                                 Style="{StaticResource ToolbarTextBlock}"
                                 Text="{x:Static resx:ResUI.TbSettingsAllowAutoDNS}" Width="740" VerticalAlignment="Center" Margin="0,0,24.9,0" />
@@ -125,7 +125,7 @@
                         BorderThickness="1"
                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                         TextWrapping="Wrap"
-                        VerticalScrollBarVisibility="Auto" Width="951.7" />
+                        VerticalScrollBarVisibility="Auto" />
                 </DockPanel>
             </TabItem>
 
