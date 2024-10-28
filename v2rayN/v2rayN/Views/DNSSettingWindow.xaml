@@ -69,7 +69,7 @@
                         <StackPanel Orientation="Horizontal" Height="49.7">
                             <TextBlock
                                 Style="{StaticResource ToolbarTextBlock}"
-                                Text="{x:Static resx:ResUI.TbSettingsAllowAutoDNS}" Width="273" VerticalAlignment="Center" Margin="0,0,24.9,0" />
+                                Text="{x:Static resx:ResUI.TbSettingsAllowAutoDNS}" Width="740" VerticalAlignment="Center" Margin="0,0,24.9,0" />
                             <ToggleButton
                                 x:Name="togAllowAutoDNS" Height="25" />
                         </StackPanel>

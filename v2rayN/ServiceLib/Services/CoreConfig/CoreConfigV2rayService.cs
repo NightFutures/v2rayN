@@ -15,7 +15,7 @@ namespace ServiceLib.Services.CoreConfig
 
         #region public gen function
 
-        public async Task<RetResult> GenerateClientConfigContent(ProfileItem node)
+        public async Task<RetResult> GenerateClientConfigContent(ProfileItem node, bool isPostConfig)
         {
             var ret = new RetResult();
             try
@@ -45,15 +45,15 @@ namespace ServiceLib.Services.CoreConfig
 
                 await GenLog(v2rayConfig);
 
-                await GenInbounds(v2rayConfig);
+                await GenInbounds(v2rayConfig, isPostConfig);
 
-                await GenRouting(v2rayConfig);
+                await GenRouting(v2rayConfig, isPostConfig);
+                
+                await GenDns(node, v2rayConfig, isPostConfig);
 
                 await GenOutbound(node, v2rayConfig.outbounds[0]);
 
                 await GenMoreOutbounds(node, v2rayConfig);
-
-                await GenDns(node, v2rayConfig);
 
                 await GenStatistic(v2rayConfig);
 
@@ -100,9 +100,9 @@ namespace ServiceLib.Services.CoreConfig
                 }
 
                 await GenLog(v2rayConfig);
-                await GenInbounds(v2rayConfig);
-                await GenRouting(v2rayConfig);
-                await GenDns(null, v2rayConfig);
+                await GenInbounds(v2rayConfig, false);
+                await GenRouting(v2rayConfig, false);
+                await GenDns(null, v2rayConfig, false);
                 await GenStatistic(v2rayConfig);
                 v2rayConfig.outbounds.RemoveAt(0);
 
@@ -377,29 +377,29 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenInbounds(V2rayConfig v2rayConfig)
+        public async Task<int> GenInbounds(V2rayConfig v2rayConfig, bool isPostConfig)
         {
             try
             {
                 var listen = "0.0.0.0";
                 v2rayConfig.inbounds = [];
 
-                Inbounds4Ray? inbound = GetInbound(_config.Inbound[0], EInboundProtocol.socks, true);
+                Inbounds4Ray? inbound = GetInbound(_config.Inbound[0], EInboundProtocol.socks, true, isPostConfig);
                 v2rayConfig.inbounds.Add(inbound);
 
                 //http
-                Inbounds4Ray? inbound2 = GetInbound(_config.Inbound[0], EInboundProtocol.http, false);
+                Inbounds4Ray? inbound2 = GetInbound(_config.Inbound[0], EInboundProtocol.http, false, isPostConfig);
                 v2rayConfig.inbounds.Add(inbound2);
 
                 if (_config.Inbound[0].AllowLANConn)
                 {
                     if (_config.Inbound[0].NewPort4LAN)
                     {
-                        var inbound3 = GetInbound(_config.Inbound[0], EInboundProtocol.socks2, true);
+                        var inbound3 = GetInbound(_config.Inbound[0], EInboundProtocol.socks2, true, isPostConfig);
                         inbound3.listen = listen;
                         v2rayConfig.inbounds.Add(inbound3);
 
-                        var inbound4 = GetInbound(_config.Inbound[0], EInboundProtocol.http2, false);
+                        var inbound4 = GetInbound(_config.Inbound[0], EInboundProtocol.http2, false, isPostConfig);
                         inbound4.listen = listen;
                         v2rayConfig.inbounds.Add(inbound4);
 
@@ -427,7 +427,7 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        private Inbounds4Ray GetInbound(InItem inItem, EInboundProtocol protocol, bool bSocks)
+        private Inbounds4Ray GetInbound(InItem inItem, EInboundProtocol protocol, bool bSocks, bool isPostConfig)
         {
             string result = Utils.GetEmbedText(Global.V2raySampleInbound);
             if (Utils.IsNullOrEmpty(result))
@@ -444,17 +444,25 @@ namespace ServiceLib.Services.CoreConfig
             inbound.port = inItem.LocalPort + (int)protocol;
             inbound.protocol = bSocks ? EInboundProtocol.socks.ToString() : EInboundProtocol.http.ToString();
             inbound.settings.udp = inItem.UdpEnabled;
-            inbound.sniffing.enabled = inItem.SniffingEnabled;
-            inbound.sniffing.destOverride = inItem.DestOverride;
-            inbound.sniffing.routeOnly = inItem.RouteOnly;
+
+            if (isPostConfig) {
+                inbound.sniffing.enabled = false;
+                inbound.sniffing.destOverride = null;
+                inbound.sniffing.routeOnly = false;
+            }
 
             return inbound;
         }
 
-        private async Task<int> GenRouting(V2rayConfig v2rayConfig)
+        private async Task<int> GenRouting(V2rayConfig v2rayConfig, bool isPostConfig)
         {
             try
             {
+                if (isPostConfig)
+                {
+                    v2rayConfig.routing.domainStrategy = "AsIs";
+                    return 0;
+                }
                 if (v2rayConfig.routing?.rules != null)
                 {
                     v2rayConfig.routing.domainStrategy = _config.RoutingBasicItem.DomainStrategy;
@@ -1032,10 +1040,14 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenDns(ProfileItem? node, V2rayConfig v2rayConfig)
+        public async Task<int> GenDns(ProfileItem? node, V2rayConfig v2rayConfig, bool isPostConfig)
         {
             try
             {
+                if (isPostConfig)
+                {
+                    return 0;
+                }
                 var item = await AppHandler.Instance.GetDNSItem(ECoreType.Xray);
                 var normalDNS = item?.NormalDNS;
                 var domainStrategy4Freedom = item?.DomainStrategy4Freedom;

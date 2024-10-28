@@ -58,7 +58,7 @@ namespace ServiceLib.Handler
             }
 
             var fileName = Utils.GetConfigPath(Global.CoreConfigFileName);
-            var result = await CoreConfigHandler.GenerateClientConfig(node, fileName);
+            var result = await CoreConfigHandler.GenerateClientConfig(node, fileName, _config.TunModeItem.EnableTun);
             ShowMsg(false, result.Msg);
             if (result.Success != true)
             {
@@ -243,7 +243,7 @@ namespace ServiceLib.Handler
                 if (itemSocks != null)
                 {
                     string fileName2 = Utils.GetConfigPath(Global.CorePreConfigFileName);
-                    var result = await CoreConfigHandler.GenerateClientConfig(itemSocks, fileName2);
+                    var result = await CoreConfigHandler.GenerateClientConfig(itemSocks, fileName2, false);
                     if (result.Success)
                     {
                         var coreInfo2 = CoreInfoHandler.Instance.GetCoreInfo(preCoreType);
