@@ -691,17 +691,11 @@
   <data name="TbSettingsAutoUpdateInterval" xml:space="preserve">
     <value>Интервал автоматического обновления Geo в часах</value>
   </data>
-  <data name="LvAutoUpdateInterval" xml:space="preserve">
-    <value>Интервал автоматического обновления в минутах</value>
-  </data>
   <data name="TbSettingsCore" xml:space="preserve">
     <value>Ядро: базовые настройки</value>
   </data>
   <data name="TbSettingsCoreDns" xml:space="preserve">
     <value>Настройки DNS V2ray</value>
-  </data>
-  <data name="TbSettingsCoreDnsSingbox" xml:space="preserve">
-    <value>Настройки DNS sing-box</value>
   </data>
   <data name="TbSettingsCoreKcp" xml:space="preserve">
     <value>Ядро: настройки KCP</value>
@@ -1009,23 +1003,29 @@
   <data name="TbSettingsFontSize" xml:space="preserve">
     <value>Размер шрифта</value>
   </data>
+  <data name="TbSettingsSpeedTestTimeout" xml:space="preserve">
+    <value>Таймаут одиночного спидтеста</value>
+  </data>
+  <data name="TbSettingsSpeedTestUrl" xml:space="preserve">
+    <value>URL спидтеста</value>
+  </data>
   <data name="TbSettingsEnableHWA" xml:space="preserve">
     <value>Включить аппаратное ускорение (требуется перезагрузка)</value>
   </data>
   <data name="menuRebootAsAdmin" xml:space="preserve">
     <value>Перезагрузить как администратор</value>
   </data>
-  <data name="menuDNSSetting" xml:space="preserve">
-    <value>Настройки DNS</value>
+  <data name="LvAutoUpdateInterval" xml:space="preserve">
+    <value>Интервал автоматического обновления в минутах</value>
   </data>
   <data name="TbSettingsLogEnabledToFile" xml:space="preserve">
     <value>Включить логгирование в файл</value>
   </data>
-  <data name="TbSettingsSpeedTestTimeout" xml:space="preserve">
-    <value>Таймаут одиночного спидтеста</value>
+  <data name="menuDNSSetting" xml:space="preserve">
+    <value>Настройки DNS</value>
   </data>
-  <data name="TbSettingsSpeedTestUrl" xml:space="preserve">
-    <value>URL спидтеста</value>
+  <data name="TbSettingsCoreDnsSingbox" xml:space="preserve">
+    <value>Настройки DNS sing-box</value>
   </data>
   <data name="TbSettingsGeoFilesSource" xml:space="preserve">
     <value>Источник geo файлов</value>
@@ -1046,6 +1046,9 @@
     <value>Россия</value>
   </data>
   <data name="TbSettingsChinaUserTip" xml:space="preserve">
-    <value>Используйте Настройки -> Региональные пресеты вместо изменения этого поля</value>
+    <value>Используйте Настройки -&gt; Региональные пресеты вместо изменения этого поля</value>
+  </data>
+  <data name="TbSettingsAllowAutoDNS" xml:space="preserve">
+    <value>Разрешить автоматическую настройку DNS на основе параметров маршрутизации (это автоматически перенаправит DNS-запросы с исходящего прокси-сервера на dns-сервер с тегом "удаленный" и отправит DNS-запросы непосредственно с прямого исходящего на dns-сервер с тегом "локальный").</value>
   </data>
 </root>

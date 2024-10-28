@@ -48,28 +48,31 @@
         <TabControl HorizontalContentAlignment="Left">
 
             <TabItem Header="{x:Static resx:ResUI.TbSettingsCoreDns}">
-                <DockPanel Margin="{StaticResource Margin8}">
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                        <TextBlock
-                            Margin="{StaticResource Margin8}"
-                            VerticalAlignment="Center"
+                <DockPanel Margin="{StaticResource Margin8}" Height="564.7">
+                    <StackPanel DockPanel.Dock="Top">
+                        <StackPanel Orientation="Horizontal" Height="50">
+                            <TextBlock
                             Style="{StaticResource ToolbarTextBlock}"
-                            Text="{x:Static resx:ResUI.TbSettingsRemoteDNS}" />
-                        <TextBlock
-                            Margin="{StaticResource Margin8}"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource ToolbarTextBlock}">
-                            <Hyperlink Click="linkDnsObjectDoc_Click">
+                            Text="{x:Static resx:ResUI.TbSettingsRemoteDNS}" VerticalAlignment="Center" Margin="0,0,20,0" />
+                            <TextBlock
+                            Style="{StaticResource ToolbarTextBlock}" VerticalAlignment="Center" Margin="0,0,20,0"><Hyperlink Click="linkDnsObjectDoc_Click"><InlineUIContainer>
                                 <TextBlock Text="{x:Static resx:ResUI.TbDnsObjectDoc}" />
+                                </InlineUIContainer><Run Text=" "/><InlineUIContainer>
                                 <materialDesign:PackIcon Kind="Link" />
-                            </Hyperlink>
-                        </TextBlock>
-                        <Button
+                                </InlineUIContainer></Hyperlink></TextBlock>
+                            <Button
                             x:Name="btnImportDefConfig4V2ray"
-                            Margin="{StaticResource Margin8}"
                             Content="{x:Static resx:ResUI.TbSettingDnsImportDefConfig}"
                             Cursor="Hand"
                             Style="{StaticResource DefButton}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Height="49.7">
+                            <TextBlock
+                                Style="{StaticResource ToolbarTextBlock}"
+                                Text="{x:Static resx:ResUI.TbSettingsAllowAutoDNS}" Width="273" VerticalAlignment="Center" Margin="0,0,24.9,0" />
+                            <ToggleButton
+                                x:Name="togAllowAutoDNS" Height="25" />
+                        </StackPanel>
                     </StackPanel>
 
                     <WrapPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
@@ -122,7 +125,7 @@
                         BorderThickness="1"
                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                         TextWrapping="Wrap"
-                        VerticalScrollBarVisibility="Auto" />
+                        VerticalScrollBarVisibility="Auto" Width="951.7" />
                 </DockPanel>
             </TabItem>
 
