@@ -5,7 +5,7 @@
     /// </summary>
     public class CoreConfigHandler
     {
-        public static async Task<RetResult> GenerateClientConfig(ProfileItem node, string? fileName, bool isPostConfig)
+        public static async Task<RetResult> GenerateClientConfig(ProfileItem node, string? fileName, EChainConfigType chainConfigType)
         {
             var config = AppHandler.Instance.Config;
             var result = new RetResult();
@@ -25,7 +25,7 @@
             }
             else
             {
-                result = await new CoreConfigV2rayService(config).GenerateClientConfigContent(node, isPostConfig);
+                result = await new CoreConfigV2rayService(config).GenerateClientConfigContent(node, chainConfigType);
             }
             if (result.Success != true)
             {

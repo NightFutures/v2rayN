@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using ZXing;
 
 namespace ServiceLib.Handler
 {
@@ -58,7 +59,21 @@ namespace ServiceLib.Handler
             }
 
             var fileName = Utils.GetConfigPath(Global.CoreConfigFileName);
-            var result = await CoreConfigHandler.GenerateClientConfig(node, fileName, _config.TunModeItem.EnableTun);
+
+            EChainConfigType chainConfigType = EChainConfigType.Undefined;
+            if ((!_config.TunModeItem.EnableTun && true && node.ConfigType != EConfigType.Custom)
+                && (node.CoreType == ECoreType.Xray 
+                    || (node.CoreType == null && _config.CoreTypeItem[0].CoreType == ECoreType.Xray))
+                && (node.PreSocksPort == null || node.PreSocksPort <= 0))
+            {
+                node.PreSocksPort = _config.Inbound[0].LocalPort + 20;
+                chainConfigType = EChainConfigType.PostProxy;
+            } else if (_config.TunModeItem.EnableTun)
+            {
+                chainConfigType = EChainConfigType.PostTun;
+            }
+
+            var result = await CoreConfigHandler.GenerateClientConfig(node, fileName, chainConfigType);
             ShowMsg(false, result.Msg);
             if (result.Success != true)
             {
@@ -217,6 +232,7 @@ namespace ServiceLib.Handler
             {
                 ProfileItem? itemSocks = null;
                 var preCoreType = ECoreType.sing_box;
+                EChainConfigType chainConfigType = EChainConfigType.Undefined;
                 if (node.ConfigType != EConfigType.Custom && coreType != ECoreType.sing_box && _config.TunModeItem.EnableTun)
                 {
                     itemSocks = new ProfileItem()
@@ -228,9 +244,22 @@ namespace ServiceLib.Handler
                         Port = AppHandler.Instance.GetLocalPort(EInboundProtocol.socks)
                     };
                 }
-                else if ((node.ConfigType == EConfigType.Custom && node.PreSocksPort > 0))
+                else if (node.ConfigType == EConfigType.Custom && node.PreSocksPort > 0)
                 {
                     preCoreType = _config.TunModeItem.EnableTun ? ECoreType.sing_box : ECoreType.Xray;
+                    itemSocks = new ProfileItem()
+                    {
+                        CoreType = preCoreType,
+                        ConfigType = EConfigType.SOCKS,
+                        Address = Global.Loopback,
+                        Port = node.PreSocksPort.Value,
+                    };
+                    _config.RunningCoreType = preCoreType;
+                }
+                else if (node.PreSocksPort > 0)
+                {
+                    preCoreType = ECoreType.Xray;
+                    chainConfigType = EChainConfigType.PreProxy;
                     itemSocks = new ProfileItem()
                     {
                         CoreType = preCoreType,
@@ -243,7 +272,7 @@ namespace ServiceLib.Handler
                 if (itemSocks != null)
                 {
                     string fileName2 = Utils.GetConfigPath(Global.CorePreConfigFileName);
-                    var result = await CoreConfigHandler.GenerateClientConfig(itemSocks, fileName2, false);
+                    var result = await CoreConfigHandler.GenerateClientConfig(itemSocks, fileName2, chainConfigType);
                     if (result.Success)
                     {
                         var coreInfo2 = CoreInfoHandler.Instance.GetCoreInfo(preCoreType);

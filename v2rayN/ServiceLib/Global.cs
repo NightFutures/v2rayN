@@ -167,7 +167,8 @@
             {EConfigType.Trojan,"trojan"},
             {EConfigType.Hysteria2,"hysteria2"},
             {EConfigType.TUIC,"tuic"},
-            {EConfigType.WireGuard,"wireguard"}
+            {EConfigType.WireGuard,"wireguard"},
+            {EConfigType.Freedom, "freedom"},
         };
 
         public static readonly List<string> VmessSecurities = new() { "aes-128-gcm", "chacha20-poly1305", "auto", "none", "zero" };

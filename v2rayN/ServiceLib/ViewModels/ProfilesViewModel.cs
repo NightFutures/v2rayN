@@ -704,7 +704,7 @@ namespace ServiceLib.ViewModels
             }
             if (blClipboard)
             {
-                var result = await CoreConfigHandler.GenerateClientConfig(item, null, false);
+                var result = await CoreConfigHandler.GenerateClientConfig(item, null, EChainConfigType.Undefined);
                 if (result.Success != true)
                 {
                     NoticeHandler.Instance.Enqueue(result.Msg);
@@ -727,7 +727,7 @@ namespace ServiceLib.ViewModels
             {
                 return;
             }
-            var result = await CoreConfigHandler.GenerateClientConfig(item, null, false);
+            var result = await CoreConfigHandler.GenerateClientConfig(item, null, EChainConfigType.Undefined);
             if (result.Success != true)
             {
                 NoticeHandler.Instance.Enqueue(result.Msg);

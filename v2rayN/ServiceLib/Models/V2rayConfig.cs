@@ -219,6 +219,11 @@ namespace ServiceLib.Models
         /// <summary>
         ///
         /// </summary>
+        public Outboundproxysettings4Ray proxySettings { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
         public StreamSettings4Ray streamSettings { get; set; }
 
         /// <summary>
@@ -255,6 +260,10 @@ namespace ServiceLib.Models
         public int? userLevel { get; set; }
 
         public FragmentItem4Ray? fragment { get; set; }
+    }
+
+    public class Outboundproxysettings4Ray {
+        public string tag { get; set; }
     }
 
     public class VnextItem4Ray
