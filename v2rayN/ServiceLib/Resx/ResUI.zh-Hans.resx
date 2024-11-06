@@ -1360,4 +1360,10 @@
   <data name="TbSettingsCurrentFontFamilyLinuxTip" xml:space="preserve">
     <value>安装字体到系统中，重启设置</value>
   </data>
+  <data name="menuExitTips" xml:space="preserve">
+    <value>是否确定退出？</value>
+  </data>
+  <data name="LvMemo" xml:space="preserve">
+    <value>备注备忘</value>
+  </data>
 </root>

@@ -162,6 +162,7 @@ namespace ServiceLib.Handler
             config.ClashUIItem ??= new();
             config.SystemProxyItem ??= new();
             config.WebDavItem ??= new();
+            config.CheckUpdateItem ??= new();
 
             return config;
         }
@@ -1197,7 +1198,7 @@ namespace ServiceLib.Handler
             {
                 await RemoveServerViaSubid(config, subid, isSub);
             }
-       
+
             profileItem.Subid = subid;
             profileItem.IsSub = isSub;
             profileItem.PreSocksPort = preSocksPort;
@@ -1358,6 +1359,7 @@ namespace ServiceLib.Handler
                 item.PrevProfile = subItem.PrevProfile;
                 item.NextProfile = subItem.NextProfile;
                 item.PreSocksPort = subItem.PreSocksPort;
+                item.Memo = subItem.Memo;
             }
 
             if (Utils.IsNullOrEmpty(item.Id))

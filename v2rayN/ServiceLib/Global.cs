@@ -46,7 +46,7 @@
         public const string ClashMixinYaml = NamespaceSample + "clash_mixin_yaml";
         public const string ClashTunYaml = NamespaceSample + "clash_tun_yaml";
         public const string LinuxAutostartConfig = NamespaceSample + "linux_autostart_config";
-        
+
         public const string DefaultSecurity = "auto";
         public const string DefaultNetwork = "tcp";
         public const string TcpHeaderHttp = "http";
@@ -105,9 +105,9 @@
 
         public static readonly List<string> SpeedTestUrls = new() {
             @"https://speed.cloudflare.com/__down?bytes=100000000",
+            @"https://speed.cloudflare.com/__down?bytes=50000000",
             @"https://speed.cloudflare.com/__down?bytes=10000000",
-            @"http://cachefly.cachefly.net/50mb.test",
-            @"http://cachefly.cachefly.net/10mb.test"
+            @"https://cachefly.cachefly.net/50mb.test",
         };
 
         public static readonly List<string> SpeedPingTestUrls = new() {

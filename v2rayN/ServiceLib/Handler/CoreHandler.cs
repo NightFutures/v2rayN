@@ -143,13 +143,11 @@ namespace ServiceLib.Handler
         {
             try
             {
-                bool hasProc = false;
                 if (_process != null)
                 {
                     await KillProcess(_process);
                     _process.Dispose();
                     _process = null;
-                    hasProc = true;
                 }
 
                 if (_processPre != null)
@@ -157,26 +155,6 @@ namespace ServiceLib.Handler
                     await KillProcess(_processPre);
                     _processPre.Dispose();
                     _processPre = null;
-                    hasProc = true;
-                }
-
-                if (!hasProc)
-                {
-                    var coreInfo = CoreInfoHandler.Instance.GetCoreInfo();
-                    foreach (var it in coreInfo)
-                    {
-                        if (it.CoreType == ECoreType.v2rayN)
-                        {
-                            continue;
-                        }
-                        foreach (var name in it.CoreExes)
-                        {
-                            var path = Utils.GetBinPath(Utils.GetExeName(name), it.CoreType.ToString());
-                            var existing = Process.GetProcessesByName(name);
-                            var pp = existing.FirstOrDefault(p => p.MainModule?.FileName != null && p.MainModule?.FileName.Contains(path) == true);
-                            await KillProcess(pp);
-                        }
-                    }
                 }
             }
             catch (Exception ex)

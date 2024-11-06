@@ -28,7 +28,7 @@ namespace v2rayN
         {
             var exePathKey = Utils.GetMd5(Utils.GetExePath());
 
-            var rebootas = (e.Args ?? new string[] { }).Any(t => t == Global.RebootAs);
+            var rebootas = (e.Args ?? []).Any(t => t == Global.RebootAs);
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, exePathKey, out bool bCreatedNew);
             if (!rebootas && !bCreatedNew)
             {

@@ -448,7 +448,16 @@ namespace ServiceLib.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to More URLs, separated by commas; Subscription conversion will be invalid.
+        ///   查找类似 Remarks Memo 的本地化字符串。
+        /// </summary>
+        public static string LvMemo {
+            get {
+                return ResourceManager.GetString("LvMemo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 More URLs, separated by commas; Subscription conversion will be invalid 的本地化字符串。
         /// </summary>
         public static string LvMoreUrl {
             get {
@@ -871,7 +880,16 @@ namespace ServiceLib.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export selected server for complete configuration.
+        ///   查找类似 Are you sure to exit? 的本地化字符串。
+        /// </summary>
+        public static string menuExitTips {
+            get {
+                return ResourceManager.GetString("menuExitTips", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Export selected server for complete configuration 的本地化字符串。
         /// </summary>
         public static string menuExport2ClientConfig {
             get {
