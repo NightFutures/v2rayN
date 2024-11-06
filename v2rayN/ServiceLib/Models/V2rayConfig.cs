@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Google.Protobuf.Reflection;
+using System.Text.Json.Serialization;
 
 namespace ServiceLib.Models
 {
@@ -25,7 +26,7 @@ namespace ServiceLib.Models
         /// <summary>
         /// 传出连接配置
         /// </summary>
-        public List<Outbounds4Ray> outbounds { get; set; }
+        public List<OutboundProxies4Ray> outbounds { get; set; }
 
         /// <summary>
         /// 统计需要， 空对象
@@ -199,12 +200,9 @@ namespace ServiceLib.Models
         public bool routeOnly { get; set; }
     }
 
-    public class Outbounds4Ray
+    public class OutboundProxies4Ray
     {
-        /// <summary>
-        /// 默认值agentout
-        /// </summary>
-        public string tag { get; set; }
+        public string? sendThrough {  get; set; }
 
         /// <summary>
         ///
@@ -214,25 +212,30 @@ namespace ServiceLib.Models
         /// <summary>
         ///
         /// </summary>
-        public Outboundsettings4Ray settings { get; set; }
+        public OutboundSettings4Ray? settings { get; set; }
+
+        /// <summary>
+        /// 默认值agentout
+        /// </summary>
+        public string? tag { get; set; }
 
         /// <summary>
         ///
         /// </summary>
-        public Outboundproxysettings4Ray proxySettings { get; set; }
+        public ProxySettings4Ray? proxySettings { get; set; }
 
         /// <summary>
         ///
         /// </summary>
-        public StreamSettings4Ray streamSettings { get; set; }
+        public StreamSettings4Ray? streamSettings { get; set; }
 
         /// <summary>
         ///
         /// </summary>
-        public Mux4Ray mux { get; set; }
+        public Mux4Ray? mux { get; set; }
     }
 
-    public class Outboundsettings4Ray
+    public class OutboundSettings4Ray
     {
         /// <summary>
         ///
@@ -262,7 +265,7 @@ namespace ServiceLib.Models
         public FragmentItem4Ray? fragment { get; set; }
     }
 
-    public class Outboundproxysettings4Ray {
+    public class ProxySettings4Ray {
         public string tag { get; set; }
     }
 
@@ -438,17 +441,22 @@ namespace ServiceLib.Models
         /// <summary>
         ///
         /// </summary>
-        public string network { get; set; }
+        public string? network { get; set; }
 
         /// <summary>
         ///
         /// </summary>
-        public string security { get; set; }
+        public string? security { get; set; }
 
         /// <summary>
         ///
         /// </summary>
         public TlsSettings4Ray? tlsSettings { get; set; }
+
+        /// <summary>
+        /// VLESS only
+        /// </summary>
+        public RealitySettings4Ray? realitySettings { get; set; }
 
         /// <summary>
         /// Tcp传输额外设置
@@ -466,6 +474,16 @@ namespace ServiceLib.Models
         public WsSettings4Ray? wsSettings { get; set; }
 
         /// <summary>
+        /// h2传输额外设置
+        /// </summary>
+        public HttpSettings4Ray? httpSettings { get; set; }
+
+        /// <summary>
+        /// grpc
+        /// </summary>
+        public GrpcSettings4Ray? grpcSettings { get; set; }
+
+        /// <summary>
         ///
         /// </summary>
         public HttpupgradeSettings4Ray? httpupgradeSettings { get; set; }
@@ -476,24 +494,9 @@ namespace ServiceLib.Models
         public SplithttpSettings4Ray? splithttpSettings { get; set; }
 
         /// <summary>
-        /// h2传输额外设置
-        /// </summary>
-        public HttpSettings4Ray? httpSettings { get; set; }
-
-        /// <summary>
         /// QUIC
         /// </summary>
         public QuicSettings4Ray? quicSettings { get; set; }
-
-        /// <summary>
-        /// VLESS only
-        /// </summary>
-        public TlsSettings4Ray? realitySettings { get; set; }
-
-        /// <summary>
-        /// grpc
-        /// </summary>
-        public GrpcSettings4Ray? grpcSettings { get; set; }
 
         /// <summary>
         /// sockopt
@@ -504,6 +507,13 @@ namespace ServiceLib.Models
     public class TlsSettings4Ray
     {
         /// <summary>
+        ///
+        /// </summary>
+        public string? serverName { get; set; }
+
+        public bool? rejectUnknownSni { get; set; }
+
+        /// <summary>
         /// 是否允许不安全连接（用于客户端）
         /// </summary>
         public bool? allowInsecure { get; set; }
@@ -511,21 +521,41 @@ namespace ServiceLib.Models
         /// <summary>
         ///
         /// </summary>
-        public string? serverName { get; set; }
-
-        /// <summary>
-        ///
-        /// </summary>
         public List<string>? alpn { get; set; }
+
+        public string? minVersion { get; set; }
+
+        public string? maxVersion { get; set; }
+
+        public string? cipherSuites { get; set; }
+
+        public List<string>? certificates { get; set; }
+
+        public bool? disableSystemRoot { get; set; }
+
+        public bool? enableSessionResumption { get; set; }
 
         public string? fingerprint { get; set; }
 
-        public bool? show { get; set; }
-        public string? publicKey { get; set; }
-        public string? shortId { get; set; }
-        public string? spiderX { get; set; }
+        public List<string>? pinnedPeerCertificateChainSha256 { get; set; }
+
+        public string? masterKeyLog {  get; set; }
     }
 
+    public class RealitySettings4Ray
+    {
+        public bool? show {  get; set; }
+
+        public string? serverName { get; set; }
+
+        public string? fingerprint { get; set; }
+
+        public string? shortId { get; set; }
+
+        public string? publicKey { get; set; }
+
+        public string? spiderX { get; set; }
+    }
     public class TcpSettings4Ray
     {
         /// <summary>
@@ -708,7 +738,26 @@ namespace ServiceLib.Models
 
     public class Sockopt4Ray
     {
-        public string? dialerProxy { get; set; }
+        public int mark { get; set; } = 0;
+        public bool tcpFastOpen { get; set; } = false;
+        public string tproxy { get; set; } = "off";
+        public string domainStrategy { get; set; } = "AsIs";
+        public string dialerProxy { get; set; } = "";
+        public bool acceptProxyProtocol { get; set; } = false;
+        public int tcpKeepAliveInterval { get; set; } = 0;
+        public string tcpcongestion { get; set; } = "bbr";
+        public string @interface { get; set; } = "wg0";
+        public bool tcpMptcp { get; set; } = false;
+        public bool tcpNoDelay { get; set; } = false;
+        public List<CustomSockopt>? customSockopt { get; set; }
+    }
+
+    public class CustomSockopt
+    {
+        public string type { get; set; } = "str";
+        public string level { get; set; } = "6";
+        public string opt { get; set; } = "13";
+        public string value { get; set; } = "bbr";
     }
 
     public class FragmentItem4Ray

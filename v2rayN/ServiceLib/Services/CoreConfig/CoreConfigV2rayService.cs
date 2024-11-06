@@ -16,7 +16,7 @@ namespace ServiceLib.Services.CoreConfig
 
         #region public gen function
 
-        public async Task<RetResult> GenerateClientConfigContent(ProfileItem node, EChainConfigType chainConfigType)
+        public async Task<RetResult> GenerateClientConfigContent(ProfileItem node, ECoreChainConfigType chainConfigType)
         {
             var ret = new RetResult();
             try
@@ -52,7 +52,7 @@ namespace ServiceLib.Services.CoreConfig
                 
                 await GenDns(node, v2rayConfig, chainConfigType);
 
-                if(chainConfigType == EChainConfigType.PreProxy)
+                if(chainConfigType == ECoreChainConfigType.PreProxy)
                 {
                     v2rayConfig.outbounds[0].tag = "ip_to_proxy";
                     v2rayConfig.outbounds[1].tag = "proxy";
@@ -115,9 +115,9 @@ namespace ServiceLib.Services.CoreConfig
                 }
 
                 await GenLog(v2rayConfig);
-                await GenInbounds(v2rayConfig, null, EChainConfigType.Undefined);
-                await GenRouting(v2rayConfig, EChainConfigType.Undefined);
-                await GenDns(null, v2rayConfig, EChainConfigType.Undefined);
+                await GenInbounds(v2rayConfig, null, ECoreChainConfigType.None);
+                await GenRouting(v2rayConfig, ECoreChainConfigType.None);
+                await GenDns(null, v2rayConfig, ECoreChainConfigType.None);
                 await GenStatistic(v2rayConfig);
                 v2rayConfig.outbounds.RemoveAt(0);
 
@@ -159,7 +159,7 @@ namespace ServiceLib.Services.CoreConfig
                     }
 
                     //outbound
-                    var outbound = JsonUtils.Deserialize<Outbounds4Ray>(txtOutbound);
+                    var outbound = JsonUtils.Deserialize<OutboundProxies4Ray>(txtOutbound);
                     await GenOutbound(item, outbound);
                     outbound.tag = $"{Global.ProxyTag}-{tagProxy.Count + 1}";
                     v2rayConfig.outbounds.Add(outbound);
@@ -335,7 +335,7 @@ namespace ServiceLib.Services.CoreConfig
                         continue;
                     }
 
-                    var outbound = JsonUtils.Deserialize<Outbounds4Ray>(txtOutbound);
+                    var outbound = JsonUtils.Deserialize<OutboundProxies4Ray>(txtOutbound);
                     await GenOutbound(item, outbound);
                     outbound.tag = Global.ProxyTag + inbound.port.ToString();
                     v2rayConfig.outbounds.Add(outbound);
@@ -392,7 +392,7 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenInbounds(V2rayConfig v2rayConfig, ProfileItem node, EChainConfigType chainConfigType)
+        public async Task<int> GenInbounds(V2rayConfig v2rayConfig, ProfileItem node, ECoreChainConfigType chainConfigType)
         {
             try
             {
@@ -402,7 +402,7 @@ namespace ServiceLib.Services.CoreConfig
 
                 Inbounds4Ray? inbound = GetInbound(_config.Inbound[0], EInboundProtocol.socks, true, chainConfigType);
                 Inbounds4Ray? inbound2 = GetInbound(_config.Inbound[0], EInboundProtocol.http, false, chainConfigType);
-                if (chainConfigType == EChainConfigType.PostProxy) {
+                if (chainConfigType == ECoreChainConfigType.PostProxy) {
                     inbound.port = node.PreSocksPort.Value;
                 } else
                 {
@@ -446,7 +446,7 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        private Inbounds4Ray GetInbound(InItem inItem, EInboundProtocol protocol, bool bSocks, EChainConfigType chainConfigType)
+        private Inbounds4Ray GetInbound(InItem inItem, EInboundProtocol protocol, bool bSocks, ECoreChainConfigType chainConfigType)
         {
             string result = Utils.GetEmbedText(Global.V2raySampleInbound);
             if (Utils.IsNullOrEmpty(result))
@@ -464,7 +464,7 @@ namespace ServiceLib.Services.CoreConfig
             inbound.protocol = bSocks ? EInboundProtocol.socks.ToString() : EInboundProtocol.http.ToString();
             inbound.settings.udp = inItem.UdpEnabled;
 
-            if (chainConfigType != EChainConfigType.Undefined && chainConfigType != EChainConfigType.PostProxy) {
+            if (chainConfigType != ECoreChainConfigType.None && chainConfigType != ECoreChainConfigType.PostProxy) {
                 inbound.sniffing.enabled = false;
                 inbound.sniffing.destOverride = null;
                 inbound.sniffing.routeOnly = false;
@@ -478,11 +478,11 @@ namespace ServiceLib.Services.CoreConfig
             return inbound;
         }
 
-        private async Task<int> GenRouting(V2rayConfig v2rayConfig, EChainConfigType chainConfigType)
+        private async Task<int> GenRouting(V2rayConfig v2rayConfig, ECoreChainConfigType chainConfigType)
         {
             try
             {
-                if (chainConfigType != EChainConfigType.Undefined && chainConfigType != EChainConfigType.PostProxy)
+                if (chainConfigType != ECoreChainConfigType.None && chainConfigType != ECoreChainConfigType.PostProxy)
                 {
                     v2rayConfig.routing.domainStrategy = "AsIs";
                     return 0;
@@ -612,7 +612,7 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenOutbound(ProfileItem node, Outbounds4Ray outbound)
+        public async Task<int> GenOutbound(ProfileItem node, OutboundProxies4Ray outbound)
         {
             try
             {
@@ -692,7 +692,7 @@ namespace ServiceLib.Services.CoreConfig
                         outbound.settings.servers = null;
                         if(outbound.proxySettings == null)
                         {
-                            outbound.proxySettings = new Outboundproxysettings4Ray();
+                            outbound.proxySettings = new ProxySettings4Ray();
                         }
                         outbound.proxySettings.tag = "proxy";
                         outbound.mux = new Mux4Ray();
@@ -835,7 +835,7 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenOutboundMux(ProfileItem node, Outbounds4Ray outbound, bool enabled)
+        public async Task<int> GenOutboundMux(ProfileItem node, OutboundProxies4Ray outbound, bool enabled)
         {
             try
             {
@@ -879,7 +879,6 @@ namespace ServiceLib.Services.CoreConfig
                     }
                 }
 
-                //if tls
                 if (node.StreamSecurity == Global.StreamSecurity)
                 {
                     streamSettings.security = node.StreamSecurity;
@@ -901,12 +900,11 @@ namespace ServiceLib.Services.CoreConfig
                     streamSettings.tlsSettings = tlsSettings;
                 }
 
-                //if Reality
                 if (node.StreamSecurity == Global.StreamSecurityReality)
                 {
                     streamSettings.security = node.StreamSecurity;
 
-                    TlsSettings4Ray realitySettings = new()
+                    RealitySettings4Ray realitySettings = new()
                     {
                         fingerprint = node.Fingerprint.IsNullOrEmpty() ? _config.CoreBasicItem.DefFingerprint : node.Fingerprint,
                         serverName = sni,
@@ -1092,15 +1090,15 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenDns(ProfileItem? node, V2rayConfig v2rayConfig, EChainConfigType chainConfigType)
+        public async Task<int> GenDns(ProfileItem? node, V2rayConfig v2rayConfig, ECoreChainConfigType chainConfigType)
         {
             try
             {
-                if (chainConfigType != EChainConfigType.Undefined && chainConfigType != EChainConfigType.PreProxy)
+                if (chainConfigType != ECoreChainConfigType.None && chainConfigType != ECoreChainConfigType.PreProxy)
                 {
                     return 0;
                 }
-                var item = await AppHandler.Instance.GetDNSItem(ECoreType.Xray);
+                var item = await AppHandler.Instance.GetDNSItem(ECoreType.xray);
                 var normalDNS = item?.NormalDNS;
                 var domainStrategy4Freedom = item?.DomainStrategy4Freedom;
                 if (Utils.IsNullOrEmpty(normalDNS))
@@ -1148,7 +1146,7 @@ namespace ServiceLib.Services.CoreConfig
                     }
                 }
 
-                await GenDnsDomains(node, obj, item);
+                await GenDnsDomains(node, obj, item, chainConfigType);
 
                 v2rayConfig.dns = obj;
             }
@@ -1159,10 +1157,12 @@ namespace ServiceLib.Services.CoreConfig
             return 0;
         }
 
-        public async Task<int> GenDnsDomains(ProfileItem? node, JsonNode dns, DNSItem? dNSItem)
+        public async Task<int> GenDnsDomains(ProfileItem? node, JsonNode dns, DNSItem? dNSItem, ECoreChainConfigType chainConfigType)
         {
             if (node == null)
-            { return 0; }
+            { 
+                return 0; 
+            }
             var servers = dns["servers"];
             if (servers != null)
             {
@@ -1174,6 +1174,10 @@ namespace ServiceLib.Services.CoreConfig
                         domains = [node.Address]
                     };
                     servers.AsArray().Add(JsonUtils.SerializeToNode(dnsServer));
+                } 
+                else  if (chainConfigType == ECoreChainConfigType.PreProxy) 
+                {
+                    
                 }
             }
             return 0;
@@ -1235,7 +1239,7 @@ namespace ServiceLib.Services.CoreConfig
             if (_config.CoreBasicItem.EnableFragment
                 && Utils.IsNotEmpty(v2rayConfig.outbounds[0].streamSettings?.security))
             {
-                var fragmentOutbound = new Outbounds4Ray
+                var fragmentOutbound = new OutboundProxies4Ray
                 {
                     protocol = "freedom",
                     tag = $"{Global.ProxyTag}3",
@@ -1282,7 +1286,7 @@ namespace ServiceLib.Services.CoreConfig
                     && prevNode.ConfigType != EConfigType.TUIC
                     && prevNode.ConfigType != EConfigType.WireGuard)
                 {
-                    var prevOutbound = JsonUtils.Deserialize<Outbounds4Ray>(txtOutbound);
+                    var prevOutbound = JsonUtils.Deserialize<OutboundProxies4Ray>(txtOutbound);
                     await GenOutbound(prevNode, prevOutbound);
                     prevOutbound.tag = $"{Global.ProxyTag}2";
                     v2rayConfig.outbounds.Add(prevOutbound);
@@ -1301,7 +1305,7 @@ namespace ServiceLib.Services.CoreConfig
                     && nextNode.ConfigType != EConfigType.TUIC
                     && nextNode.ConfigType != EConfigType.WireGuard)
                 {
-                    var nextOutbound = JsonUtils.Deserialize<Outbounds4Ray>(txtOutbound);
+                    var nextOutbound = JsonUtils.Deserialize<OutboundProxies4Ray>(txtOutbound);
                     await GenOutbound(nextNode, nextOutbound);
                     nextOutbound.tag = Global.ProxyTag;
                     v2rayConfig.outbounds.Insert(0, nextOutbound);

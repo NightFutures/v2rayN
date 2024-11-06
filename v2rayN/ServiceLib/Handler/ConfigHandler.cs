@@ -94,8 +94,8 @@ namespace ServiceLib.Handler
             };
             config.TunModeItem ??= new TunModeItem
             {
-                EnableTun = false,
-                Mtu = 9000,
+                IsTunEnabled = false,
+                MtuSize = 9000,
             };
             config.GuiItem ??= new()
             {
@@ -1730,7 +1730,7 @@ namespace ServiceLib.Handler
                 var item = new DNSItem()
                 {
                     Remarks = "V2ray",
-                    CoreType = ECoreType.Xray,
+                    CoreType = ECoreType.xray,
                 };
                 await SaveDNSItems(config, item);
 
@@ -1817,7 +1817,7 @@ namespace ServiceLib.Handler
                     config.ConstItem.SrsSourceUrl = Global.SingboxRulesetSources[1];
                     config.ConstItem.RouteRulesTemplateSourceUrl = Global.RoutingRulesSources[1];
 
-                    await SaveDNSItems(config, await GetExternalDNSItem(ECoreType.Xray, Global.DNSTemplateSources[1] + "v2ray.json"));
+                    await SaveDNSItems(config, await GetExternalDNSItem(ECoreType.xray, Global.DNSTemplateSources[1] + "v2ray.json"));
                     await SaveDNSItems(config, await GetExternalDNSItem(ECoreType.sing_box, Global.DNSTemplateSources[1] + "sing_box.json"));
 
                     return true;

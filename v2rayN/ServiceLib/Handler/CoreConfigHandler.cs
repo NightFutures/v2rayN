@@ -5,7 +5,7 @@
     /// </summary>
     public class CoreConfigHandler
     {
-        public static async Task<RetResult> GenerateClientConfig(ProfileItem node, string? fileName, EChainConfigType chainConfigType)
+        public static async Task<RetResult> GenerateClientConfig(ProfileItem node, string? fileName, ECoreChainConfigType coreChainConfigType)
         {
             var config = AppHandler.Instance.Config;
             var result = new RetResult();
@@ -25,7 +25,7 @@
             }
             else
             {
-                result = await new CoreConfigV2rayService(config).GenerateClientConfigContent(node, chainConfigType);
+                result = await new CoreConfigV2rayService(config).GenerateClientConfigContent(node, coreChainConfigType);
             }
             if (result.Success != true)
             {
@@ -95,7 +95,7 @@
             {
                 result = await new CoreConfigSingboxService(config).GenerateClientSpeedtestConfig(selecteds);
             }
-            else if (coreType == ECoreType.Xray)
+            else if (coreType == ECoreType.xray)
             {
                 result = await new CoreConfigV2rayService(config).GenerateClientSpeedtestConfig(selecteds);
             }
@@ -114,7 +114,7 @@
             {
                 result = await new CoreConfigSingboxService(config).GenerateClientMultipleLoadConfig(selecteds);
             }
-            else if (coreType == ECoreType.Xray)
+            else if (coreType == ECoreType.xray)
             {
                 result = await new CoreConfigV2rayService(config).GenerateClientMultipleLoadConfig(selecteds);
             }

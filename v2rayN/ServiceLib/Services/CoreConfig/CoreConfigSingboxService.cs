@@ -483,8 +483,8 @@ namespace ServiceLib.Services.CoreConfig
                 var listen = "::";
                 singboxConfig.inbounds = [];
 
-                if (!_config.TunModeItem.EnableTun
-                    || _config.TunModeItem.EnableTun && _config.TunModeItem.EnableExInbound && _config.RunningCoreType == ECoreType.sing_box)
+                if (!_config.TunModeItem.IsTunEnabled
+                    || _config.TunModeItem.IsTunEnabled && _config.TunModeItem.IsExInboundEnabled && _config.RunningCoreType == ECoreType.sing_box)
                 {
                     var inbound = new Inbound4Sbox()
                     {
@@ -539,11 +539,11 @@ namespace ServiceLib.Services.CoreConfig
                     }
                 }
 
-                if (_config.TunModeItem.EnableTun)
+                if (_config.TunModeItem.IsTunEnabled)
                 {
-                    if (_config.TunModeItem.Mtu <= 0)
+                    if (_config.TunModeItem.MtuSize <= 0)
                     {
-                        _config.TunModeItem.Mtu = Utils.ToInt(Global.TunMtus[0]);
+                        _config.TunModeItem.MtuSize = Utils.ToInt(Global.TunMtus[0]);
                     }
                     if (Utils.IsNullOrEmpty(_config.TunModeItem.Stack))
                     {
@@ -551,12 +551,12 @@ namespace ServiceLib.Services.CoreConfig
                     }
 
                     var tunInbound = JsonUtils.Deserialize<Inbound4Sbox>(Utils.GetEmbedText(Global.TunSingboxInboundFileName)) ?? new Inbound4Sbox { };
-                    tunInbound.mtu = _config.TunModeItem.Mtu;
-                    tunInbound.strict_route = _config.TunModeItem.StrictRoute;
+                    tunInbound.mtu = _config.TunModeItem.MtuSize;
+                    tunInbound.strict_route = _config.TunModeItem.IsStrictRoute;
                     tunInbound.stack = _config.TunModeItem.Stack;
                     tunInbound.sniff = _config.Inbound[0].SniffingEnabled;
                     //tunInbound.sniff_override_destination = _config.inbound[0].routeOnly ? false : _config.inbound[0].sniffingEnabled;
-                    if (_config.TunModeItem.EnableIPv6Address == false)
+                    if (_config.TunModeItem.IsIPv6AddressEnabled == false)
                     {
                         tunInbound.inet6_address = null;
                     }
@@ -933,7 +933,7 @@ namespace ServiceLib.Services.CoreConfig
                     clash_mode = ERuleMode.Global.ToString()
                 });
 
-                if (_config.TunModeItem.EnableTun)
+                if (_config.TunModeItem.IsTunEnabled)
                 {
                     singboxConfig.route.auto_detect_interface = true;
 
@@ -1089,7 +1089,7 @@ namespace ServiceLib.Services.CoreConfig
                     }
                 }
 
-                if (_config.TunModeItem.EnableTun && item.Process?.Count > 0)
+                if (_config.TunModeItem.IsTunEnabled && item.Process?.Count > 0)
                 {
                     rule3.process_name = item.Process;
                     rules.Add(rule3);
@@ -1183,7 +1183,7 @@ namespace ServiceLib.Services.CoreConfig
             {
                 var item = await AppHandler.Instance.GetDNSItem(ECoreType.sing_box);
                 var strDNS = string.Empty;
-                if (_config.TunModeItem.EnableTun)
+                if (_config.TunModeItem.IsTunEnabled)
                 {
                     strDNS = Utils.IsNullOrEmpty(item?.TunDNS) ? Utils.GetEmbedText(Global.TunSingboxDNSFileName) : item?.TunDNS;
                 }
@@ -1248,7 +1248,7 @@ namespace ServiceLib.Services.CoreConfig
             }
 
             //Tun2SocksAddress
-            if (_config.TunModeItem.EnableTun && node?.ConfigType == EConfigType.SOCKS && Utils.IsDomain(node?.Sni))
+            if (_config.TunModeItem.IsTunEnabled && node?.ConfigType == EConfigType.SOCKS && Utils.IsDomain(node?.Sni))
             {
                 dns4Sbox.rules.Insert(0, new()
                 {

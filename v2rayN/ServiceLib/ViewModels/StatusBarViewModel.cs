@@ -108,13 +108,13 @@ namespace ServiceLib.ViewModels
             SelectedServer = new();
             RunningServerToolTipText = "-";
 
-            if (_config.TunModeItem.EnableTun && AppHandler.Instance.IsAdministrator)
+            if (_config.TunModeItem.IsTunEnabled && AppHandler.Instance.IsAdministrator)
             {
                 EnableTun = true;
             }
             else
             {
-                _config.TunModeItem.EnableTun = EnableTun = false;
+                _config.TunModeItem.IsTunEnabled = EnableTun = false;
             }
 
             #region WhenAnyValue && ReactiveCommand
@@ -410,13 +410,13 @@ namespace ServiceLib.ViewModels
 
         private async Task DoEnableTun(bool c)
         {
-            if (_config.TunModeItem.EnableTun != EnableTun)
+            if (_config.TunModeItem.IsTunEnabled != EnableTun)
             {
-                _config.TunModeItem.EnableTun = EnableTun;
+                _config.TunModeItem.IsTunEnabled = EnableTun;
                 // When running as a non-administrator, reboot to administrator mode
                 if (EnableTun && !AppHandler.Instance.IsAdministrator)
                 {
-                    _config.TunModeItem.EnableTun = false;
+                    _config.TunModeItem.IsTunEnabled = false;
                     Locator.Current.GetService<MainWindowViewModel>()?.RebootAsAdmin();
                     return;
                 }

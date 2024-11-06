@@ -11,7 +11,7 @@ namespace ServiceLib.Handler
     {
         private static readonly Lazy<CoreHandler> _instance = new(() => new());
         public static CoreHandler Instance => _instance.Value;
-        private Config _config;
+        private Config? _config;
         private Process? _process;
         private Process? _processPre;
         private Action<bool, string>? _updateFunc;
@@ -26,10 +26,10 @@ namespace ServiceLib.Handler
 
             if (Utils.IsLinux())
             {
-                var coreInfo = CoreInfoHandler.Instance.GetCoreInfo();
-                foreach (var it in coreInfo)
+                var coreInfoList = CoreInfoHandler.Instance.GetCoreInfo();
+                foreach (var coreInfo in coreInfoList)
                 {
-                    if (it.CoreType == ECoreType.v2rayN)
+                    if (coreInfo.CoreType == ECoreType.v2rayN)
                     {
                         if (Utils.UpgradeAppExists(out var fileName))
                         {
@@ -38,9 +38,14 @@ namespace ServiceLib.Handler
                         continue;
                     }
 
-                    foreach (var name in it.CoreExes)
+                    if (coreInfo.CoreExes == null)
                     {
-                        var exe = Utils.GetBinPath(Utils.GetExeName(name), it.CoreType.ToString());
+                        return;
+                    }
+
+                    foreach (var name in coreInfo.CoreExes)
+                    {
+                        var exe = Utils.GetBinPath(Utils.GetExeName(name), coreInfo.CoreType.ToString());
                         if (File.Exists(exe))
                         {
                             await Utils.SetLinuxChmod(exe);
@@ -57,25 +62,37 @@ namespace ServiceLib.Handler
                 ShowMsg(false, ResUI.CheckServerSettings);
                 return;
             }
+            if (_config == null)
+            {
+                ShowMsg(false, ResUI.FailedToRunCore);
+                return;
+            }
+
 
             var fileName = Utils.GetConfigPath(Global.CoreConfigFileName);
 
-            EChainConfigType chainConfigType = EChainConfigType.Undefined;
-            if ((!_config.TunModeItem.EnableTun && true && node.ConfigType != EConfigType.Custom)
-                && (node.CoreType == ECoreType.Xray 
-                    || (node.CoreType == null && _config.CoreTypeItem[0].CoreType == ECoreType.Xray))
-                && (node.PreSocksPort == null || node.PreSocksPort <= 0))
+            ECoreChainConfigType coreChainConfigType = ECoreChainConfigType.None;
+
+            if (node.CoreType != ECoreType.sing_box)
             {
-                node.PreSocksPort = _config.Inbound[0].LocalPort + 20;
-                chainConfigType = EChainConfigType.PostProxy;
-            } else if (_config.TunModeItem.EnableTun)
-            {
-                chainConfigType = EChainConfigType.PostTun;
+                if(_config.TunModeItem.IsTunEnabled)
+                {
+                    coreChainConfigType = ECoreChainConfigType.PostTun;
+                }
+                else if (true && node.ConfigType != EConfigType.Custom)
+                {
+                    node.PreSocksPort = _config.Inbound[0].LocalPort + 20;
+                    coreChainConfigType = ECoreChainConfigType.PostProxy;
+                }
             }
 
-            var result = await CoreConfigHandler.GenerateClientConfig(node, fileName, chainConfigType);
-            ShowMsg(false, result.Msg);
-            if (result.Success != true)
+            var result = await CoreConfigHandler.GenerateClientConfig(node, fileName, coreChainConfigType);
+
+            if (result?.Msg != null)
+            {
+                ShowMsg(false, result.Msg);
+            }
+            if (result?.Success != true)
             {
                 return;
             }
@@ -108,11 +125,14 @@ namespace ServiceLib.Handler
         public async Task<int> LoadCoreConfigSpeedtest(List<ServerTestItem> selecteds)
         {
             var pid = -1;
-            var coreType = selecteds.Exists(t => t.ConfigType is EConfigType.Hysteria2 or EConfigType.TUIC or EConfigType.WireGuard) ? ECoreType.sing_box : ECoreType.Xray;
+            var coreType = selecteds.Exists(t => t.ConfigType is EConfigType.Hysteria2 or EConfigType.TUIC or EConfigType.WireGuard) ? ECoreType.sing_box : ECoreType.xray;
             var configPath = Utils.GetConfigPath(Global.CoreSpeedtestConfigFileName);
             var result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, configPath, selecteds, coreType);
-            ShowMsg(false, result.Msg);
-            if (result.Success)
+            if (result?.Msg != null)
+            {
+                ShowMsg(false, result.Msg);
+            }
+            if (result?.Success == true)
             {
                 pid = await CoreStartSpeedtest(configPath, coreType);
             }
@@ -232,8 +252,8 @@ namespace ServiceLib.Handler
             {
                 ProfileItem? itemSocks = null;
                 var preCoreType = ECoreType.sing_box;
-                EChainConfigType chainConfigType = EChainConfigType.Undefined;
-                if (node.ConfigType != EConfigType.Custom && coreType != ECoreType.sing_box && _config.TunModeItem.EnableTun)
+                ECoreChainConfigType chainConfigType = ECoreChainConfigType.None;
+                if (node.ConfigType != EConfigType.Custom && coreType != ECoreType.sing_box && _config.TunModeItem.IsTunEnabled)
                 {
                     itemSocks = new ProfileItem()
                     {
@@ -246,7 +266,7 @@ namespace ServiceLib.Handler
                 }
                 else if (node.ConfigType == EConfigType.Custom && node.PreSocksPort > 0)
                 {
-                    preCoreType = _config.TunModeItem.EnableTun ? ECoreType.sing_box : ECoreType.Xray;
+                    preCoreType = _config.TunModeItem.IsTunEnabled ? ECoreType.sing_box : ECoreType.xray;
                     itemSocks = new ProfileItem()
                     {
                         CoreType = preCoreType,
@@ -258,8 +278,8 @@ namespace ServiceLib.Handler
                 }
                 else if (node.PreSocksPort > 0)
                 {
-                    preCoreType = ECoreType.Xray;
-                    chainConfigType = EChainConfigType.PreProxy;
+                    preCoreType = ECoreType.xray;
+                    chainConfigType = ECoreChainConfigType.PreProxy;
                     itemSocks = new ProfileItem()
                     {
                         CoreType = preCoreType,

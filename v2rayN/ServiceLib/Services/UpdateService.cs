@@ -330,7 +330,7 @@ namespace ServiceLib.Services
                 switch (type)
                 {
                     case ECoreType.v2fly:
-                    case ECoreType.Xray:
+                    case ECoreType.xray:
                     case ECoreType.v2fly_v5:
                         version = Regex.Match(echo, $"{coreInfo.Match} ([0-9.]+) \\(").Groups[1].Value;
                         break;
@@ -364,7 +364,7 @@ namespace ServiceLib.Services
                 switch (type)
                 {
                     case ECoreType.v2fly:
-                    case ECoreType.Xray:
+                    case ECoreType.xray:
                     case ECoreType.v2fly_v5:
                         {
                             curVersion = await GetCoreVersion(type);

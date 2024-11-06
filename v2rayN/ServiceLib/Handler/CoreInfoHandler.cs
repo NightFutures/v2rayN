@@ -5,7 +5,7 @@ namespace ServiceLib.Handler
     public sealed class CoreInfoHandler
     {
         private static readonly Lazy<CoreInfoHandler> _instance = new(() => new());
-        private List<CoreInfo>? _coreInfo;
+        private List<CoreInfo>? _coreInfoList;
         public static CoreInfoHandler Instance => _instance.Value;
 
         public CoreInfoHandler()
@@ -15,27 +15,27 @@ namespace ServiceLib.Handler
 
         public CoreInfo? GetCoreInfo(ECoreType coreType)
         {
-            if (_coreInfo == null)
+            if (_coreInfoList == null)
             {
                 InitCoreInfo();
             }
-            return _coreInfo?.FirstOrDefault(t => t.CoreType == coreType);
+            return _coreInfoList?.FirstOrDefault(t => t.CoreType == coreType);
         }
 
         public List<CoreInfo> GetCoreInfo()
         {
-            if (_coreInfo == null)
+            if (_coreInfoList == null)
             {
                 InitCoreInfo();
             }
-            return _coreInfo ?? [];
+            return _coreInfoList ?? [];
         }
 
         private void InitCoreInfo()
         {
-            _coreInfo = [];
+            _coreInfoList = [];
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.v2rayN,
                 Url = Global.NUrl,
@@ -46,7 +46,7 @@ namespace ServiceLib.Handler
                 DownloadUrlLinuxArm64 = Global.NUrl + "/download/{0}/v2rayN-linux-arm64.zip",
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.v2fly,
                 CoreExes = new List<string> { "wv2ray", "v2ray" },
@@ -58,7 +58,7 @@ namespace ServiceLib.Handler
                 RedirectInfo = true,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.v2fly_v5,
                 CoreExes = new List<string> { "v2ray" },
@@ -70,9 +70,9 @@ namespace ServiceLib.Handler
                 RedirectInfo = true,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
-                CoreType = ECoreType.Xray,
+                CoreType = ECoreType.xray,
                 CoreExes = new List<string> { "xray", "wxray" },
                 Arguments = "run {0}",
                 Url = Global.XrayCoreUrl,
@@ -86,7 +86,7 @@ namespace ServiceLib.Handler
                 RedirectInfo = true,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.mihomo,
                 CoreExes = new List<string> { $"mihomo-windows-amd64{(Avx2.X64.IsSupported ? "" : "-compatible")}", "mihomo-windows-amd64-compatible", "mihomo-windows-amd64", "mihomo-windows-386", "mihomo", "clash" },
@@ -102,7 +102,7 @@ namespace ServiceLib.Handler
                 RedirectInfo = true,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.hysteria,
                 CoreExes = new List<string> { "hysteria-windows-amd64", "hysteria-windows-386", "hysteria" },
@@ -112,7 +112,7 @@ namespace ServiceLib.Handler
                 RedirectInfo = true,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.naiveproxy,
                 CoreExes = new List<string> { "naiveproxy", "naive" },
@@ -121,7 +121,7 @@ namespace ServiceLib.Handler
                 RedirectInfo = false,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.tuic,
                 CoreExes = new List<string> { "tuic-client", "tuic" },
@@ -130,7 +130,7 @@ namespace ServiceLib.Handler
                 RedirectInfo = true,
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.sing_box,
                 CoreExes = new List<string> { "sing-box-client", "sing-box" },
@@ -146,7 +146,7 @@ namespace ServiceLib.Handler
                 VersionArg = "version",
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.juicity,
                 CoreExes = new List<string> { "juicity-client", "juicity" },
@@ -154,7 +154,7 @@ namespace ServiceLib.Handler
                 Url = Global.JuicityCoreUrl
             });
 
-            _coreInfo.Add(new CoreInfo
+            _coreInfoList.Add(new CoreInfo
             {
                 CoreType = ECoreType.hysteria2,
                 CoreExes = new List<string> { "hysteria-windows-amd64", "hysteria-windows-386", "hysteria" },

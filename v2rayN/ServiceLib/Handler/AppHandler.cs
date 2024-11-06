@@ -241,7 +241,7 @@
                 case ECoreType.v2fly:
                     return Global.SsSecurities;
 
-                case ECoreType.Xray:
+                case ECoreType.xray:
                     return Global.SsSecuritiesInXray;
 
                 case ECoreType.sing_box:
@@ -259,12 +259,12 @@
 
             if (_config.CoreTypeItem == null)
             {
-                return ECoreType.Xray;
+                return ECoreType.xray;
             }
             var item = _config.CoreTypeItem.FirstOrDefault(it => it.ConfigType == eConfigType);
             if (item == null)
             {
-                return ECoreType.Xray;
+                return ECoreType.xray;
             }
             return item.CoreType;
         }

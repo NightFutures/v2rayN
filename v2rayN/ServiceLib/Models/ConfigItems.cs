@@ -157,12 +157,12 @@
     [Serializable]
     public class TunModeItem
     {
-        public bool EnableTun { get; set; }
-        public bool StrictRoute { get; set; } = true;
+        public bool IsTunEnabled { get; set; }
+        public bool IsStrictRoute { get; set; } = true;
         public string Stack { get; set; }
-        public int Mtu { get; set; }
-        public bool EnableExInbound { get; set; }
-        public bool EnableIPv6Address { get; set; }
+        public int MtuSize { get; set; }
+        public bool IsExInboundEnabled { get; set; }
+        public bool IsIPv6AddressEnabled { get; set; }
     }
 
     [Serializable]

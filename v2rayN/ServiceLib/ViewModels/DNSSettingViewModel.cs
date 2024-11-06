@@ -45,7 +45,7 @@ namespace ServiceLib.ViewModels
 
         private async Task Init()
         {
-            var item = await AppHandler.Instance.GetDNSItem(ECoreType.Xray);
+            var item = await AppHandler.Instance.GetDNSItem(ECoreType.xray);
             useSystemHosts = item.UseSystemHosts;
             domainStrategy4Freedom = item?.DomainStrategy4Freedom ?? string.Empty;
             domainDNSAddress = item?.DomainDNSAddress ?? string.Empty;
@@ -94,7 +94,7 @@ namespace ServiceLib.ViewModels
                 }
             }
 
-            var item = await AppHandler.Instance.GetDNSItem(ECoreType.Xray);
+            var item = await AppHandler.Instance.GetDNSItem(ECoreType.xray);
             item.DomainStrategy4Freedom = domainStrategy4Freedom;
             item.DomainDNSAddress = domainDNSAddress;
             item.UseSystemHosts = useSystemHosts;

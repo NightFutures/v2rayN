@@ -54,7 +54,7 @@ namespace ServiceLib.ViewModels
                 _checkUpdateItem.Add(new CheckUpdateItem()
                 {
                     IsSelected = true,
-                    CoreType = ECoreType.Xray.ToString(),
+                    CoreType = ECoreType.xray.ToString(),
                     Remarks = ResUI.menuCheckUpdate,
                 });
                 _checkUpdateItem.Add(new CheckUpdateItem()
@@ -99,7 +99,7 @@ namespace ServiceLib.ViewModels
                 {
                     await CheckUpdateN(EnableCheckPreReleaseUpdate);
                 }
-                else if (item.CoreType == ECoreType.Xray.ToString())
+                else if (item.CoreType == ECoreType.xray.ToString())
                 {
                     await CheckUpdateCore(item, EnableCheckPreReleaseUpdate);
                 }

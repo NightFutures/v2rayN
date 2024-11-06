@@ -1,8 +1,8 @@
 ﻿namespace ServiceLib.Enums
 {
-    public enum EChainConfigType
+    public enum ECoreChainConfigType
     {
-        Undefined = 0,
+        None = 0,
         PostTun = 1,
         PostProxy = 2,
         PreProxy = 3,

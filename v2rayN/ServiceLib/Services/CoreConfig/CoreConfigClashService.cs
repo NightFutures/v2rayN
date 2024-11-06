@@ -115,7 +115,7 @@
                 }
 
                 //enable tun mode
-                if (_config.TunModeItem.EnableTun)
+                if (_config.TunModeItem.IsTunEnabled)
                 {
                     string tun = Utils.GetEmbedText(Global.ClashTunYaml);
                     if (Utils.IsNotEmpty(tun))
@@ -181,7 +181,7 @@
             }
             foreach (var item in mixinContent)
             {
-                if (!_config.TunModeItem.EnableTun && item.Key == "tun")
+                if (!_config.TunModeItem.IsTunEnabled && item.Key == "tun")
                 {
                     continue;
                 }

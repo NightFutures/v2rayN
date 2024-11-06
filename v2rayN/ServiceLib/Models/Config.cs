@@ -15,7 +15,7 @@
 
         public bool IsRunningCore(ECoreType type)
         {
-            if (type == ECoreType.Xray && RunningCoreType is ECoreType.Xray or ECoreType.v2fly or ECoreType.v2fly_v5)
+            if (type == ECoreType.xray && RunningCoreType is ECoreType.xray or ECoreType.v2fly or ECoreType.v2fly_v5)
             {
                 return true;
             }

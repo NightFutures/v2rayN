@@ -51,7 +51,7 @@ namespace ServiceLib.Services.Statistics
                 await Task.Delay(1000);
                 try
                 {
-                    if (!_config.IsRunningCore(ECoreType.Xray))
+                    if (!_config.IsRunningCore(ECoreType.xray))
                     {
                         continue;
                     }

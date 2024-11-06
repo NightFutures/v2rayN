@@ -154,7 +154,7 @@ namespace ServiceLib.ViewModels
             }, canEditRemove);
             SetDefaultLoadBalanceServerCmd = ReactiveCommand.CreateFromTask(async () =>
             {
-                await SetDefaultMultipleServer(ECoreType.Xray);
+                await SetDefaultMultipleServer(ECoreType.xray);
             }, canEditRemove);
 
             //servers move
@@ -704,7 +704,7 @@ namespace ServiceLib.ViewModels
             }
             if (blClipboard)
             {
-                var result = await CoreConfigHandler.GenerateClientConfig(item, null, EChainConfigType.Undefined);
+                var result = await CoreConfigHandler.GenerateClientConfig(item, null, ECoreChainConfigType.None);
                 if (result.Success != true)
                 {
                     NoticeHandler.Instance.Enqueue(result.Msg);
@@ -727,7 +727,7 @@ namespace ServiceLib.ViewModels
             {
                 return;
             }
-            var result = await CoreConfigHandler.GenerateClientConfig(item, null, EChainConfigType.Undefined);
+            var result = await CoreConfigHandler.GenerateClientConfig(item, null, ECoreChainConfigType.None);
             if (result.Success != true)
             {
                 NoticeHandler.Instance.Enqueue(result.Msg);

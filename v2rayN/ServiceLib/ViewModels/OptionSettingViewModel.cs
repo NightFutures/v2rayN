@@ -194,11 +194,11 @@ namespace ServiceLib.ViewModels
 
             #region Tun mode
 
-            TunStrictRoute = _config.TunModeItem.StrictRoute;
+            TunStrictRoute = _config.TunModeItem.IsStrictRoute;
             TunStack = _config.TunModeItem.Stack;
-            TunMtu = _config.TunModeItem.Mtu;
-            TunEnableExInbound = _config.TunModeItem.EnableExInbound;
-            TunEnableIPv6Address = _config.TunModeItem.EnableIPv6Address;
+            TunMtu = _config.TunModeItem.MtuSize;
+            TunEnableExInbound = _config.TunModeItem.IsExInboundEnabled;
+            TunEnableIPv6Address = _config.TunModeItem.IsIPv6AddressEnabled;
 
             #endregion Tun mode
 
@@ -222,7 +222,7 @@ namespace ServiceLib.ViewModels
                 _config.CoreTypeItem.Add(new CoreTypeItem()
                 {
                     ConfigType = it,
-                    CoreType = ECoreType.Xray
+                    CoreType = ECoreType.xray
                 });
             }
             _config.CoreTypeItem.ForEach(it =>
@@ -338,11 +338,11 @@ namespace ServiceLib.ViewModels
             _config.SystemProxyItem.SystemProxyAdvancedProtocol = systemProxyAdvancedProtocol;
 
             //tun mode
-            _config.TunModeItem.StrictRoute = TunStrictRoute;
+            _config.TunModeItem.IsStrictRoute = TunStrictRoute;
             _config.TunModeItem.Stack = TunStack;
-            _config.TunModeItem.Mtu = TunMtu;
-            _config.TunModeItem.EnableExInbound = TunEnableExInbound;
-            _config.TunModeItem.EnableIPv6Address = TunEnableIPv6Address;
+            _config.TunModeItem.MtuSize = TunMtu;
+            _config.TunModeItem.IsExInboundEnabled = TunEnableExInbound;
+            _config.TunModeItem.IsIPv6AddressEnabled = TunEnableIPv6Address;
 
             //coreType
             await SaveCoreType();

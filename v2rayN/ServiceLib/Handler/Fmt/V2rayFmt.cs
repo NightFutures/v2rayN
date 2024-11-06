@@ -20,7 +20,7 @@
 
                         var profileIt = new ProfileItem
                         {
-                            CoreType = ECoreType.Xray,
+                            CoreType = ECoreType.xray,
                             Address = fileName,
                             Remarks = v2rayCon.remarks ?? subRemarks ?? "v2ray_custom",
                         };
@@ -43,7 +43,7 @@
 
                 var profileItem = new ProfileItem
                 {
-                    CoreType = ECoreType.Xray,
+                    CoreType = ECoreType.xray,
                     Address = fileName,
                     Remarks = v2rayConfig.remarks ?? subRemarks ?? "v2ray_custom"
                 };
